@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>SET Scan</title>
+<!--         <link rel="apple-touch-icon-precomposed" sizes="57x57" href="Images/SET_Logo_Square.jpg" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="Images/SET_Logo_Square.jpg" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="Images/SET_Logo_Square.jpg" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="Images/SET_Logo_Square.jpg" /> -->
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <link rel="apple-touch-icon" sizes="57x57" href="Images/SET_Logo_Square_Camera_White_57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="Images/SET_Logo_Square_Camera_White_72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="Images/SET_Logo_Square_Camera_White_114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="Images/SET_Logo_Square_Camera_White_144.png" />
+        <link rel="apple-touch-startup-image" href="Images/SET_Logo_Square_Camera_White.png" />
+
+        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="The sample demonstrates how to read barcodes (Linear, PDF417, DataMatrix, QR Code) from photos captured from webcam on your mobile phone or tablet." />
+        
+        <link rel="stylesheet" type="text/css" href="css/w3.css">
+        <link href="Css/bootstrap.min.css" rel="stylesheet">   
+        <link href="Css/jquery-ui.min.css" rel="stylesheet">                    
+        <link href="Css/style.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="Images/SET_Logo_Square_Camera_White.png" />
+        
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        
+        <script src="scripts/lib/jquery-1.12.0.min.js"></script>    
+        <script src="scripts/lib/bootstrap.min.js"></script>            
+        <script src="scripts/lib/jquery-ui.min.js"></script>
+        <script src="scripts/lib/kissy-min.js"></script>        
+        <script src="scripts/lib/load-image.all.min.js"></script>
+
+        <style type="text/css">
+            .sidenav {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: #111;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 60px;
+            }
+
+            .sidenav a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                font-size: 25px;
+                color: #818181;
+                display: block;
+                transition: 0.3s;
+            }
+
+            .sidenav a:hover, .offcanvas a:focus{
+                color: #f1f1f1;
+            }
+
+            .sidenav .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+
+
+            @media screen and (max-height: 450px) {
+              .sidenav {padding-top: 15px;}
+              .sidenav a {font-size: 18px;}
+            }
+        </style>
+
+    </head>
+    <body>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div style = 'text-align: center;'>No records found</div>
+    </div>
+
+    <div id="main">
+
+        <div id="demoInfoDiv" style="margin: 0 auto; display: none;">
+            <img width="500" height="500" src="Images/ScanQRCode.jpg" alt="Scan the QR Code using webcam to open Dynamsoft Barcode Reader demo" style="display:block; margin: 20px auto; width:auto;" />
+
+            <p align="center" style="font-size: 18px; font-weight: bold; font-family: OpenSans-Regular, Arial, Times, serif">
+                Scan QR Code using your mobile webcam to open our Dynamsoft Barcode Reader demo
+            </p>
+            <p align="center" style="font-size: 14px; font-family: OpenSans-Regular, Arial, Times, serif">
+                If you are using a mobile phone or tablet, you can also copy and paste the URL 'http://demo2.dynamsoft.com/dbr/mobilecam/MobilecamBarcodeReader.html' directly into browser address bar.
+            </p>
+        </div>
+
+        <div class = 'w3-pink w3-display-container w3-container' style = "position: fixed; height: 8%; top: 0px; width: 100%; z-index: 1000">
+            <div class = "w3-btn w3-yellow w3-round-medium w3-card w3-display-left w3-margin-left" id = "backBtn" style = 'display: none;'>Back</div>
+            <div class = "w3-btn w3-white w3-round-medium w3-card  w3-display-left w3-margin-left" onclick="toggleNav()" id = 'history'>History</div>
+        </div>
+
+        <div id="container" style="display: none; width: 100%; height: 92%; position: fixed; top: 8%">
+            <div class="D-dailog row" id="J_waiting"><div id="strBody"></div></div>
+
+            <div id="imgContainer" style = "width: 100%; height: 100%; padding: 1%">
+                <div id="divBorder" style="height: 98%; width: 99%; margin: auto"></div>
+            </div>
+
+            <div style = "display: none">
+                <div id="divMultiBarcodes" class="grayBorderTop grayBorderBottom">
+                    <span id="spMultiBarcodes">Multi-barcode:</span>
+                    
+                    <div id="lblMultiBarcodesContainer" class="floatRight">
+                        <label id="lblMultiBarcodes" class="switch">
+                            <input class="switch-input" id="chkMultiBarcodes" name="BarcodeType" checked type="checkbox" onclick="ClickCheckBox(this);" />
+                            <span class="switch-label" data-on="" data-off=""></span> 
+                            <span class="switch-handle"></span> 
+                        </label> 
+                    </div>
+                </div>
+
+                <div id="divBarcodeTypes" class="grayBorderBottom">
+                    <div id="divBarcodeTypesP1" class="clear">
+                        <div id="divLinear" class="displayIB">
+                            <span id="spLinear">Linear:</span>
+                            <label id="lblLinear" class="switch">
+                                <input class="switch-input" id="chkLinear" name="BarcodeType" type="checkbox" value="0x3FF" checked onclick="ClickCheckBox(this);" />
+                                <span class="switch-label" data-on="" data-off=""></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+
+                        <div id="divQRCode" class="displayIB">
+                            <span id="spQRCode">QRCode:</span>
+                            <label class="switch">
+                                <input class="switch-input" id="chkQRCode" name="BarcodeType" checked type="checkbox" value="0x4000000" onclick="ClickCheckBox(this);" />
+                                <span class="switch-label" data-on="" data-off=""></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="divSapLine" class="grayBorderTop"></div>
+
+                    <div id="divBarcodeTypesP2" class="clear">
+                        <div id="divPdf" class="displayIB">
+                            <span id="spPdf">PDF417:</span>
+                            <label class="switch">
+                                <input class="switch-input" id="chkPdf" name="BarcodeType" type="checkbox" value="0x2000000" onclick="ClickCheckBox(this);" />
+                                <span class="switch-label" data-on="" data-off=""></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+
+                        <div id="divDM" class="displayIB">
+                            <span id="spDM">DataMatrix:</span>
+                            <label class="switch">
+                                <input class="switch-input" id="chkDM" name="BarcodeType" checked type="checkbox" value="0x8000000" onclick="ClickCheckBox(this);" />
+                                <span class="switch-label" data-on="" data-off=""></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="divButtons" class="clear" style = "display: none;"">
+                <a id="btnGrab" href="javascript:void(0);" class="largeBtnwhite" style="display: none">Grab Image</a>
+                <br>
+                <a id="btnRead" href="javascript:void(0);" style = "display: none; height: 55px; width: 10em; line-height: 40px; margin: auto; font-size: 1.5em" class="largeBtnOrg w3-green w3-border-green w3-btn">Upload & Read</a>
+            </div>
+            
+            <canvas id="orgCanvas" style="display: none;"></canvas>
+            <input type="file" name="fileToUpload" id="fileToUpload" style="display: none;" accept="image/*" />
+            <div id="dlgResult" title="Barcode Result Dialog" style="display: none;"></div>
+        </div>
+
+        <div id = "redirected" style = "position: absolute; display: none; width: 100%; height: 92%; top: 8%">
+            <iframe id = "iframe" scrolling="yes" style = "height: 100%; width: 100%; overflow: scroll;"></iframe>
+            <!-- <div id = "backBtn" class = 'w3-orange w3-round-medium w3-btn w3-card-4' style = "position: fixed; top: 20px; left: 20px">Back</div> -->
+        </div>
+
+
+        <div id = "alertMsg" style = "display: none; width: 60%; height: 20%; position: absolute; top: 40%; left: 20%">
+            <div class="w3-panel w3-pink w3-display-container">
+                <span id = 'alertCloseBtn' class="w3-button w3-pink w3-large w3-display-topright">&times;</span>
+                <h3>Alert!</h3>
+                <p id = "alertP"></p>
+            </div>
+        </div>
+    </div>
+
+        <script src="scripts/cust/Dynamsoft.BarcodeReaderDemo.js"></script>
+        <script src="scripts/cust/readBarcode.js"></script>
+    </body>
+</html>
